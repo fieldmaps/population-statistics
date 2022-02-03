@@ -1,0 +1,2 @@
+hdx-python-api>=5.5.2
+pandas>=1.4.0
