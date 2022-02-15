@@ -1,4 +1,3 @@
-from time import time
 import xml.etree.ElementTree as ET
 import subprocess
 from pathlib import Path
@@ -28,7 +27,6 @@ def get_tif(name, include):
 
 
 def main():
-    start_time = time()
     data.mkdir(parents=True, exist_ok=True)
     for name in data_types:
         vrt = data / f'hrsl_{name}/hrsl_{name}-latest.vrt'
@@ -41,4 +39,4 @@ def main():
         for file in (data / f'hrsl_{name}').rglob('*.tif*'):
             if not file.name in ','.join(files):
                 file.unlink()
-    logger.info(time() - start_time)
+    logger.info('finished')
