@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO,
 cwd = Path(__file__).parent
 grps = ['t', 'f', 'm']
 dests = ['00_04', '05_09', '10_14', '15_19', '20_24', '25_29', '30_34',
-         '35_39', '40_44', '45_49', '50_54', '55_59', '60_64', '65_plus']
+         '35_39', '40_44', '45_49', '50_54', '55_59', '60_plus']
 cols_meta = ['iso_3', 'ps_lvl', 'ps_year', 'ps_census']
 
 
@@ -40,13 +40,11 @@ def get_all_meta():
                      keep_default_na=False, na_values=['', '#N/A'])
     df = df.rename(columns={'cod_lvl': 'ps_lvl', 'cod_lvl_max': 'ps_lvl_max',
                             'cod_year': 'ps_year', 'cod_census': 'ps_census'})
-    df['id'] = df['id'].str[:3]
     df['id'] = df['id'].str.lower()
     df['iso_3'] = df['id'].str.upper()
     df['ps_lvl_max'] = df['ps_lvl_max'].combine_first(df['ps_lvl'])
     df = df[['id', 'iso_3', 'ps_lvl', 'ps_lvl_max', 'ps_year', 'ps_census']]
-    df = df[df['ps_lvl'] >= 0]
-    return df.drop_duplicates()
+    return df[df['ps_lvl'] >= 0]
 
 
 def apply_funcs(name, level, row, *args):

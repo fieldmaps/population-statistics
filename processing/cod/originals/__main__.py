@@ -11,6 +11,7 @@ def read_csv():
     pool = Pool()
     for row in adm0_list:
         args = [row['id'], row['ps_lvl'], row, *funcs]
+        # attributes.main(row['id'], row['ps_lvl'], row)
         result = pool.apply_async(apply_funcs, args=args)
         results.append(result)
     pool.close()
