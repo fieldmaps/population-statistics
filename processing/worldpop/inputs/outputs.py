@@ -2,15 +2,15 @@ import pandas as pd
 from .utils import DATABASE, logging, cwd, land_date
 
 logger = logging.getLogger(__name__)
-outputs = cwd / f'../../../outputs/ciesin'
+outputs = cwd / f'../../../outputs/worldpop'
 con = f'postgresql:///{DATABASE}'
 
 
 def main():
     outputs.mkdir(parents=True, exist_ok=True)
-    df = pd.read_sql_table('ciesin_pop_out', con)
+    df = pd.read_sql_table('worldpop_pop_unconstrained_out', con)
     df['wld_update'] = land_date
-    with pd.ExcelWriter(outputs / 'pop_ciesin.xlsx') as w:
+    with pd.ExcelWriter(outputs / 'pop_worldpop.xlsx') as w:
         for lvl in range(4, -1, -1):
             df = df.groupby([f'adm{l}_id' for l in range(lvl, -1, -1)] + ['iso_3', 'wld_update'],
                             dropna=False).sum(min_count=1).reset_index()

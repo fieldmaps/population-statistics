@@ -7,6 +7,7 @@ logging.basicConfig(level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 DATABASE = 'population_statistics'
+FILE_NAME = 'gpw_v4_population_count_rev11_2020_30_sec'
 
 
 def get_land_date():

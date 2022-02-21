@@ -1,5 +1,5 @@
 from multiprocessing import Pool
-from . import download, merge_inputs, inputs, stats, merge, outputs
+from . import download, merge, inputs, stats, outputs
 from .utils import logging, data_types
 
 logger = logging.getLogger(__name__)
@@ -21,8 +21,7 @@ def run_process(func):
 if __name__ == '__main__':
     logger.info('starting')
     # download.main()
-    merge_inputs.main()
+    # merge.main()
     # run_process(inputs.main)
     # run_process(stats.main)
-    # merge.main()
-    # outputs.main()
+    outputs.main()

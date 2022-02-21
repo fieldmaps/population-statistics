@@ -1,5 +1,5 @@
 import subprocess
-from .utils import DATABASE, logging, cwd
+from .utils import DATABASE, FILE_NAME, logging, cwd
 
 logger = logging.getLogger(__name__)
 inputs = cwd / f'../../../inputs/ciesin'
@@ -10,7 +10,7 @@ def main():
         'raster2pgsql',
         '-d', '-r', '-C', '-I', '-Y',
         '-t', '256x256',
-        str((inputs / 'gpw_v4_population_count_rev11_2020_30_sec.tif').resolve()),
+        str((inputs / f'{FILE_NAME}_tiled.tif').resolve()),
         'ciesin_pop',
         '|',
         'psql',
