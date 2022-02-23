@@ -1,6 +1,6 @@
 from psycopg2 import connect
 from psycopg2.sql import SQL, Identifier
-from .utils import DATABASE, logging, data_types
+from .utils import DATABASE, logging
 
 logger = logging.getLogger(__name__)
 
@@ -31,15 +31,15 @@ query_1 = """
 """
 
 
-def main(name):
+def main():
     con = connect(database=DATABASE)
     con.set_session(autocommit=True)
     cur = con.cursor()
     cur.execute(SQL(query_1).format(
-        table_in=Identifier(f'worldpop_pop_{name}'),
+        table_in=Identifier(f'worldpop_pop'),
         col=Identifier('t'),
-        table_out=Identifier(f'worldpop_pop_{name}_out'),
+        table_out=Identifier(f'worldpop_pop_out'),
     ))
     cur.close()
     con.close()
-    logger.info(name)
+    logger.info('finished')

@@ -9,13 +9,6 @@ logging.basicConfig(level=logging.INFO,
 DATABASE = 'population_statistics'
 cwd = Path(__file__).parent
 
-data_types = ['unconstrained', 'constrained']
-
-
-def apply_funcs(name, *args):
-    for func in args:
-        func(name)
-
 
 def get_all_meta():
     df = pd.read_csv(cwd / '../../../inputs/meta.csv',

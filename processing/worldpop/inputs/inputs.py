@@ -7,16 +7,16 @@ cwd = Path(__file__).parent
 data = cwd / f'../../../inputs/worldpop'
 
 
-def main(name):
+def main():
     subprocess.run(' '.join([
         'raster2pgsql',
         '-d', '-C', '-I', '-Y',
         '-t', '256x256',
-        str((data / f'{name}.tif').resolve()),
-        f'worldpop_pop_{name}',
+        str((data / f'unconstrained.tif').resolve()),
+        f'worldpop_pop',
         '|',
         'psql',
         '--quiet',
         '-d', DATABASE,
     ]), shell=True)
-    logger.info(name)
+    logger.info('finished')

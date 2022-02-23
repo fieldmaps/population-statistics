@@ -8,7 +8,7 @@ con = f'postgresql:///{DATABASE}'
 
 def main():
     outputs.mkdir(parents=True, exist_ok=True)
-    df = pd.read_sql_table('worldpop_pop_unconstrained_out', con)
+    df = pd.read_sql_table('worldpop_pop_out', con)
     df['wld_update'] = land_date
     with pd.ExcelWriter(outputs / 'pop_worldpop.xlsx') as w:
         for lvl in range(4, -1, -1):
