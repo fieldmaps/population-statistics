@@ -1,22 +1,26 @@
 import subprocess
-from pathlib import Path
-from .utils import DATABASE, logging
+from .utils import DATABASE, YEAR, cwd, logging
 
 logger = logging.getLogger(__name__)
-cwd = Path(__file__).parent
 data = cwd / f'../../../inputs/worldpop'
 
 
 def main():
-    subprocess.run(' '.join([
-        'raster2pgsql',
-        '-d', '-C', '-I', '-Y',
-        '-t', '256x256',
-        str((data / f'unconstrained.tif').resolve()),
-        f'worldpop_pop',
-        '|',
+    query = (data / 'query.sql').resolve()
+    query.unlink(missing_ok=True)
+    with open(query, 'w') as f:
+        subprocess.run([
+            'raster2pgsql',
+            '-d', '-C', '-I', '-R', '-Y',
+            '-t', 'auto',
+            (data / f'ppp_{YEAR}_unconstrained.tif').resolve(),
+            'worldpop_pop',
+        ], stdout=f)
+    subprocess.run([
         'psql',
         '--quiet',
         '-d', DATABASE,
-    ]), shell=True)
-    logger.info('finished')
+        '-f', query,
+    ])
+    query.unlink(missing_ok=True)
+    logger.info(f'finished')

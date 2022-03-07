@@ -1,44 +1,52 @@
-from psycopg2 import connect
-from psycopg2.sql import SQL, Identifier
-from .utils import DATABASE, logging, data_types
+import subprocess
+from .utils import logging, cwd, run_process, data_types
 
 logger = logging.getLogger(__name__)
+data = cwd / '../../../inputs/meta_fb'
 
-query_1 = """
-    DROP TABLE IF EXISTS {table_out};
-    CREATE TABLE {table_out} AS
-    SELECT
-        a.*,
-        b.f,
-        c.m,
-        d.t_00_04,
-        e.t_15_24,
-        f.t_60_plus,
-        g.f_15_49
-    FROM meta_fb_pop_t_out AS a
-    JOIN meta_fb_pop_f_out AS b
-    ON a.adm4_id = b.adm4_id
-    JOIN meta_fb_pop_m_out AS c
-    ON a.adm4_id = c.adm4_id
-    JOIN meta_fb_pop_t_00_04_out AS d
-    ON a.adm4_id = d.adm4_id
-    JOIN meta_fb_pop_t_15_24_out AS e
-    ON a.adm4_id = e.adm4_id
-    JOIN meta_fb_pop_t_60_plus_out AS f
-    ON a.adm4_id = f.adm4_id
-    JOIN meta_fb_pop_f_15_49_out AS g
-    ON a.adm4_id = g.adm4_id
-    ORDER BY adm4_id;
-"""
+
+def build_vrt(name):
+    subprocess.run([
+        'gdalbuildvrt',
+        '-q',
+        data / f'hrsl_{name}/hrsl_{name}-latest.vrt',
+        *sorted((data / f'hrsl_{name}').rglob('*.tif')),
+    ])
+
+
+def build_vrt_all():
+    subprocess.run([
+        'gdalbuildvrt',
+        '-q',
+        '-separate',
+        data / 'hrsl-latest.vrt',
+        *[(data / f'hrsl_{x}/hrsl_{x}-latest.vrt') for x in data_types],
+    ])
+
+
+def merge_data(name):
+    (data / f'hrsl_{name}/v1').mkdir(parents=True, exist_ok=True)
+    (data / f'hrsl_{name}/v1.5').mkdir(parents=True, exist_ok=True)
+    for file in sorted((data / f'hrsl_{name}_original').rglob('*.tif*')):
+        subprocess.run([
+            'gdal_translate',
+            '-q',
+            '--config', 'GDAL_NUM_THREADS', 'ALL_CPUS',
+            '-co', 'TILED=YES',
+            '-co', 'BLOCKXSIZE=512',
+            '-co', 'BLOCKYSIZE=512',
+            '-co', 'COMPRESS=DEFLATE',
+            '-co', 'ZLEVEL=9',
+            '-ot', 'Float32',
+            file,
+            str(file).replace(f'/hrsl_{name}_original/', f'/hrsl_{name}/'),
+        ])
+        logger.info(file.name)
+    build_vrt(name)
+    logger.info(name)
 
 
 def main():
-    con = connect(database=DATABASE)
-    con.set_session(autocommit=True)
-    cur = con.cursor()
-    cur.execute(SQL(query_1).format(
-        table_out=Identifier(f'meta_fb_pop_out'),
-    ))
-    cur.close()
-    con.close()
+    run_process(merge_data)
+    build_vrt_all()
     logger.info('finished')

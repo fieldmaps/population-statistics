@@ -1,10 +1,9 @@
+import subprocess
 import requests
 from multiprocessing import Pool
-from pathlib import Path
-from .utils import logging, adm0_list
+from .utils import YEAR, cwd, logging, adm0_list
 
 logger = logging.getLogger(__name__)
-cwd = Path(__file__).parent
 data = cwd / '../../../inputs/worldpop'
 
 
@@ -12,7 +11,7 @@ def run_process():
     results = []
     pool = Pool()
     for row in adm0_list:
-        args = [row['id'], row['iso_3']]
+        args = [row['id']]
         result = pool.apply_async(get_tif, args=args)
         results.append(result)
     pool.close()
@@ -21,9 +20,9 @@ def run_process():
         result.get()
 
 
-def get_tif(id, iso_3):
-    url = f'https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/{iso_3}/{id}_ppp_2020.tif'
-    file = f'unconstrained/{id}_ppp_2020.tif'
+def get_tif(id):
+    url = f'https://data.worldpop.org/GIS/Population/Global_2000_{YEAR}/{YEAR}/{id.upper()}/{id}_ppp_{YEAR}.tif'
+    file = f'unconstrained/{id}_ppp_{YEAR}.tif'
     r = requests.get(url, stream=True)
     if r.status_code == 200:
         with open(data / file, 'wb') as f:
@@ -33,8 +32,18 @@ def get_tif(id, iso_3):
         logger.info(id)
 
 
+def build_vrt():
+    subprocess.run([
+        'gdalbuildvrt',
+        '-q',
+        data / 'unconstrained.vrt',
+        *sorted((data / 'unconstrained').rglob('*.tif')),
+    ])
+
+
 def main():
-    if not (data / 'unconstrained.tif').is_file():
+    if not (data / f'ppp_{YEAR}_unconstrained.tif').is_file():
         (data / 'unconstrained').mkdir(parents=True, exist_ok=True)
         run_process()
+        build_vrt()
     logger.info('finished')

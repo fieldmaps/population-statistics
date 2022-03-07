@@ -1,22 +1,30 @@
 import subprocess
-from pathlib import Path
-from .utils import DATABASE, logging, data_types
+from .utils import DATABASE, cwd, logging, run_process, data_types
 
 logger = logging.getLogger(__name__)
-cwd = Path(__file__).parent
 data = cwd / f'../../../inputs/meta_fb'
 
 
-def main(name):
-    subprocess.run(' '.join([
-        'raster2pgsql',
-        '-d', '-C', '-I', '-Y',
-        '-t', '256x256',
-        str((data / f'hrsl_{name}/hrsl_{name}-latest.vrt').resolve()),
-        f'meta_fb_pop_{data_types[name]}',
-        '|',
+def input_data(name):
+    query = (data / f'{name}.sql').resolve()
+    query.unlink(missing_ok=True)
+    with open(query, 'w') as f:
+        subprocess.run([
+            'raster2pgsql',
+            '-d', '-C', '-I', '-R', '-Y',
+            '-t', '512x512',
+            (data / f'hrsl_{name}/hrsl_{name}-latest.vrt').resolve(),
+            f'meta_fb_pop_{data_types[name]}',
+        ], stdout=f)
+    subprocess.run([
         'psql',
         '--quiet',
         '-d', DATABASE,
-    ]), shell=True)
-    logger.info('finished')
+        '-f', query,
+    ])
+    query.unlink(missing_ok=True)
+    logger.info(name)
+
+
+def main():
+    run_process(input_data)

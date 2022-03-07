@@ -10,7 +10,9 @@ RUN apt-get update \
 RUN /etc/init.d/postgresql start \
   && su postgres -c 'createdb population_statistics' \
   && su postgres -c 'psql -d population_statistics -c "CREATE EXTENSION postgis;"' \
-  && su postgres -c 'psql -d population_statistics -c "CREATE EXTENSION postgis_raster;"'
+  && su postgres -c 'psql -d population_statistics -c "CREATE EXTENSION postgis_raster;"' \
+  && su postgres -c 'psql -d population_statistics -c "ALTER DATABASE population_statistics SET postgis.enable_outdb_rasters = true;"' \
+  && su postgres -c 'psql -d population_statistics -c "ALTER DATABASE population_statistics SET postgis.gdal_enabled_drivers TO \'ENABLE_ALL\';"'
 
 WORKDIR /usr/src/app
 

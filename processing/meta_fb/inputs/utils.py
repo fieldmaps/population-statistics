@@ -1,4 +1,5 @@
 import logging
+from multiprocessing import Pool
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO,
@@ -19,10 +20,14 @@ data_types = {
 }
 
 
-def get_land_date():
-    cwd = Path(__file__).parent
-    with open(cwd / '../../../../adm0-generator/data/land/README.txt') as f:
-        return f.readlines()[21][25:35]
-
-
-land_date = get_land_date()
+def run_process(func):
+    results = []
+    pool = Pool()
+    for name in data_types:
+        args = [name]
+        result = pool.apply_async(func, args=args)
+        results.append(result)
+    pool.close()
+    pool.join()
+    for result in results:
+        result.get()

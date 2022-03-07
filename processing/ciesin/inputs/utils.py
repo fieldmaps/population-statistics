@@ -8,11 +8,3 @@ logging.basicConfig(level=logging.INFO,
 
 DATABASE = 'population_statistics'
 FILE_NAME = 'gpw_v4_population_count_rev11_2020_30_sec'
-
-
-def get_land_date():
-    with open(cwd / '../../../../adm0-generator/data/land/README.txt') as f:
-        return f.readlines()[21][25:35]
-
-
-land_date = get_land_date()

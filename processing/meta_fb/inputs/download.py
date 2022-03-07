@@ -1,11 +1,23 @@
-import xml.etree.ElementTree as ET
+import filecmp
 import subprocess
-from pathlib import Path
-from .utils import logging, data_types
+import xml.etree.ElementTree as ET
+from .utils import cwd, logging, run_process
 
 logger = logging.getLogger(__name__)
-cwd = Path(__file__).parent
 data = cwd / '../../../inputs/meta_fb'
+
+
+def download_data(name):
+    vrt = data / f'hrsl_{name}_original/hrsl_{name}-latest.vrt'
+    get_vrt(name, vrt)
+    tree = ET.parse(vrt)
+    files = [x.text for x in tree.iter('SourceFilename')]
+    include = [['--include', x] for x in files]
+    include = [i for l in include for i in l]
+    get_tif(name, include)
+    for file in (data / f'hrsl_{name}_original').rglob('*.tif*'):
+        if not file.name in ','.join(files):
+            file.unlink()
 
 
 def get_vrt(name, vrt):
@@ -22,21 +34,19 @@ def get_tif(name, include):
         '--exclude', '*',
         *include,
         f's3://dataforgood-fb-data/hrsl-cogs/hrsl_{name}/',
-        data / f'hrsl_{name}',
+        data / f'hrsl_{name}_original',
     ])
 
 
 def main():
     data.mkdir(parents=True, exist_ok=True)
-    for name in data_types:
-        vrt = data / f'hrsl_{name}/hrsl_{name}-latest.vrt'
-        get_vrt(name, vrt)
-        tree = ET.parse(vrt)
-        files = [x.text for x in tree.iter('SourceFilename')]
-        include = [['--include', x] for x in files]
-        include = [i for l in include for i in l]
-        get_tif(name, include)
-        for file in (data / f'hrsl_{name}').rglob('*.tif*'):
-            if not file.name in ','.join(files):
-                file.unlink()
+    vrt_imported = data / 'hrsl-imported.vrt'
+    vrt_latest = data / 'hrsl_general-latest.vrt'
+    get_vrt('general', vrt_latest)
+    if vrt_imported.is_file():
+        if not filecmp.cmp(vrt_imported, vrt_latest):
+            run_process(download_data)
+    else:
+        run_process(download_data)
+    vrt_latest.rename(data / 'hrsl-imported.vrt')
     logger.info('finished')

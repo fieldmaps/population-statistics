@@ -7,23 +7,17 @@ logging.basicConfig(level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 DATABASE = 'population_statistics'
+YEAR = 2020
 cwd = Path(__file__).parent
 
 
 def get_all_meta():
     df = pd.read_csv(cwd / '../../../inputs/meta.csv',
                      keep_default_na=False, na_values=['', '#N/A'])
+    df['id'] = df['iso_wp'].combine_first(df['iso_3'])
     df['id'] = df['id'].str.lower()
-    df['iso_3'] = df['id'].str.upper()
-    df = df[['id', 'iso_3']]
+    df = df[['id']]
     return df.to_dict('records')
 
 
-def get_land_date():
-    cwd = Path(__file__).parent
-    with open(cwd / '../../../../adm0-generator/data/land/README.txt') as f:
-        return f.readlines()[21][25:35]
-
-
-land_date = get_land_date()
 adm0_list = get_all_meta()
