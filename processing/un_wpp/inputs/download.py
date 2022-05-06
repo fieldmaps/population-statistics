@@ -7,6 +7,7 @@ data = cwd / '../../../inputs/un_wpp'
 
 
 def download_file(url):
+    data.mkdir(parents=True, exist_ok=True)
     file = data / url.split('/')[-1]
     r = requests.get(url)
     with open(data / file, 'wb') as f:
