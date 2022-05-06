@@ -3,5 +3,7 @@ __pycache__
 /inputs/ciesin
 /inputs/cod
 /inputs/meta_fb
+/inputs/un_wpp
+/inputs/world_bank
 /inputs/worldpop
 /outputs
