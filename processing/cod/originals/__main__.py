@@ -1,18 +1,16 @@
 from multiprocessing import Pool
 from . import attributes, concat
-from .utils import logging, adm0_list, apply_funcs
+from .utils import logging, adm0_list
 
 logger = logging.getLogger(__name__)
-funcs = [attributes.main]
 
 
 def read_csv():
     results = []
     pool = Pool()
     for row in adm0_list:
-        args = [row['id'], row['ps_lvl'], row, *funcs]
-        # attributes.main(row['id'], row['ps_lvl'], row)
-        result = pool.apply_async(apply_funcs, args=args)
+        args = [row['id'], row['ps_lvl'], row]
+        result = pool.apply_async(attributes.main, args=args)
         results.append(result)
     pool.close()
     pool.join()

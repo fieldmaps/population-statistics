@@ -1,9 +1,7 @@
 import pandas as pd
-from pathlib import Path
-from .utils import logging, grps, cols, col_map, get_srcs, cols_meta
+from .utils import cwd, logging, grps, cols, col_map, get_srcs, cols_meta
 
 logger = logging.getLogger(__name__)
-cwd = Path(__file__).parent
 data = cwd / '../../../data/cod'
 
 

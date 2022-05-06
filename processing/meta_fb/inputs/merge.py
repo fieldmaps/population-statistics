@@ -14,16 +14,6 @@ def build_vrt(name):
     ])
 
 
-def build_vrt_all():
-    subprocess.run([
-        'gdalbuildvrt',
-        '-q',
-        '-separate',
-        data / 'hrsl-latest.vrt',
-        *[(data / f'hrsl_{x}/hrsl_{x}-latest.vrt') for x in data_types],
-    ])
-
-
 def merge_data(name):
     (data / f'hrsl_{name}/v1').mkdir(parents=True, exist_ok=True)
     (data / f'hrsl_{name}/v1.5').mkdir(parents=True, exist_ok=True)
@@ -48,5 +38,4 @@ def merge_data(name):
 
 def main():
     run_process(merge_data)
-    build_vrt_all()
     logger.info('finished')

@@ -1,3 +1,4 @@
+import filecmp
 import subprocess
 from .utils import DATABASE, cwd, logging, run_process, data_types
 
@@ -27,4 +28,7 @@ def input_data(name):
 
 
 def main():
-    run_process(input_data)
+    vrt_imported = data / 'hrsl-imported.vrt'
+    vrt_latest = data / 'hrsl_general-latest.vrt'
+    if not filecmp.cmp(vrt_imported, vrt_latest):
+        run_process(input_data)

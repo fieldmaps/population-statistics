@@ -48,5 +48,4 @@ def main():
             run_process(download_data)
     else:
         run_process(download_data)
-    vrt_latest.rename(data / 'hrsl-imported.vrt')
     logger.info('finished')

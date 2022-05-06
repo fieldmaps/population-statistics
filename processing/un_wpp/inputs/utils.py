@@ -7,4 +7,5 @@ logging.basicConfig(level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 DATA_URL = 'https://population.un.org/wpp/Download/Files/1_Indicators%20(Standard)/CSV_FILES/WPP2019_TotalPopulationBySex.csv'
+ADM0_URL = 'https://data.fieldmaps.io/adm0/intl/adm0_polygons.xlsx'
 YEAR = 2022

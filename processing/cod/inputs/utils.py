@@ -5,7 +5,6 @@ from hdx.data.dataset import Dataset
 
 Configuration.create(hdx_read_only=True, user_agent='read_only')
 cwd = Path(__file__).parent
-# COD_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQLc4p08eCEGMUjCNt4rcVj4KExhgtFqD2fuXWseoRZtgF2eNl74qCk6Jhezb7xMjlCy1WZP4NaMKy-/pub?gid=2003220882&single=true&output=csv'
 COD_URL = cwd / '../../../inputs/cod_tmp.csv'
 
 fieldmap = {

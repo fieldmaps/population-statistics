@@ -40,16 +40,10 @@ def get_all_meta():
                      keep_default_na=False, na_values=['', '#N/A'])
     df = df.rename(columns={'cod_lvl': 'ps_lvl', 'cod_lvl_max': 'ps_lvl_max',
                             'cod_year': 'ps_year', 'cod_census': 'ps_census'})
-    df['id'] = df['id'].str.lower()
-    df['iso_3'] = df['id'].str.upper()
+    df['id'] = df['iso_3'].str.lower()
     df['ps_lvl_max'] = df['ps_lvl_max'].combine_first(df['ps_lvl'])
     df = df[['id', 'iso_3', 'ps_lvl', 'ps_lvl_max', 'ps_year', 'ps_census']]
     return df[df['ps_lvl'] >= 0]
-
-
-def apply_funcs(name, level, row, *args):
-    for func in args:
-        func(name, level, row)
 
 
 def get_srcs(lvl):
