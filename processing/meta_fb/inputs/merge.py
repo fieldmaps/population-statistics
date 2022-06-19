@@ -1,5 +1,5 @@
 import subprocess
-from .utils import logging, cwd, run_process, data_types
+from .utils import logging, cwd, run_process
 
 logger = logging.getLogger(__name__)
 data = cwd / '../../../inputs/meta_fb'

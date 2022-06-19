@@ -2,8 +2,11 @@ import pandas as pd
 from .utils import logging, cwd
 
 logger = logging.getLogger(__name__)
+config = cwd / '../../../config'
 data = cwd / '../../../data'
 outputs = cwd / '../../../outputs'
+
+fields = ['t', 'f', 'm', 't_00_04', 't_15_24', 't_60_plus', 'f_15_49']
 
 
 def get_ids(l):
@@ -17,20 +20,24 @@ def export_factor(df):
     dfx['factor'] = dfx['t_y'] / dfx['t_x']
     dfx['factor'] = dfx['factor'].fillna(1)
     dfx = dfx[get_ids(-1) + ['factor']]
-    dfx.to_excel(outputs / 'worldpop_factor.xlsx', index=False)
-    dfx.to_csv(outputs / 'worldpop_factor.csv', index=False)
-    dfx.to_json(outputs / 'worldpop_factor.json', orient='records')
+    dfx.to_excel(outputs / 'meta_fb_factor.xlsx', index=False)
+    dfx.to_csv(outputs / 'meta_fb_factor.csv', index=False)
+    dfx.to_json(outputs / 'meta_fb_factor.json', orient='records')
     return dfx
 
 
 def main():
-    df = pd.read_excel(data / 'worldpop.xlsx')
+    df = pd.read_excel(data / 'meta_fb.xlsx')
+    df2 = pd.read_csv(config / 'meta_fb.csv')
+    df = df.merge(df2, on='iso_3')
+    df = df[df['valid'] == 1]
     dfx = export_factor(df)
     df = df.merge(dfx, on=get_ids(-1))
-    df['t'] = df['t'] * df['factor']
-    df['t'] = df['t'].round(0).fillna(0)
-    df = df.drop(['count', 'factor'], axis=1)
-    with pd.ExcelWriter(outputs / 'worldpop.xlsx') as writer:
+    for field in fields:
+        df[field] = df[field] * df['factor']
+        df[field] = df[field].round(0).fillna(0)
+    df = df.drop(['count', 'factor', 'valid'], axis=1)
+    with pd.ExcelWriter(outputs / 'meta_fb.xlsx') as writer:
         for l in range(4, -2, -1):
             df = df.groupby(get_ids(l), dropna=False).sum(
                 min_count=1).reset_index()

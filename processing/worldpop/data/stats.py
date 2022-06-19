@@ -17,8 +17,8 @@ query_1 = """
     )
     SELECT
         adm4_id, adm3_id, adm2_id, adm1_id, adm0_id, iso_3,
-        (ST_SummaryStatsAgg(rast, 1, true)).count::INTEGER AS count,
-        (ST_SummaryStatsAgg(rast, 1, true)).sum::INTEGER AS {col}
+        (ST_SummaryStatsAgg(rast, 1, true)).count AS count,
+        (ST_SummaryStatsAgg(rast, 1, true)).sum AS {col}
     FROM x
     GROUP BY adm4_id, adm3_id, adm2_id, adm1_id, adm0_id, iso_3
     ORDER BY adm4_id;

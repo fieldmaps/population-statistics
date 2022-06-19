@@ -1,7 +1,7 @@
 import filecmp
 import subprocess
 import xml.etree.ElementTree as ET
-from .utils import cwd, logging, run_process
+from .utils import cwd, logging, data_types
 
 logger = logging.getLogger(__name__)
 data = cwd / '../../../inputs/meta_fb'
@@ -45,7 +45,9 @@ def main():
     get_vrt('general', vrt_latest)
     if vrt_imported.is_file():
         if not filecmp.cmp(vrt_imported, vrt_latest):
-            run_process(download_data)
+            for name in data_types:
+                download_data(name)
     else:
-        run_process(download_data)
+        for name in data_types:
+            download_data(name)
     logger.info('finished')

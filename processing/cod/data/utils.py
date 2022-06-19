@@ -36,7 +36,7 @@ def get_col_map():
 def get_all_meta():
     dtypes = {'cod_lvl': 'Int8', 'cod_lvl_max': 'Int8',
               'cod_year': 'Int16', 'cod_census': 'Int16'}
-    df = pd.read_csv(cwd / '../../../inputs/meta.csv', dtype=dtypes,
+    df = pd.read_csv(cwd / '../../../config/meta.csv', dtype=dtypes,
                      keep_default_na=False, na_values=['', '#N/A'])
     df = df.rename(columns={'cod_lvl': 'ps_lvl', 'cod_lvl_max': 'ps_lvl_max',
                             'cod_year': 'ps_year', 'cod_census': 'ps_census'})
@@ -51,7 +51,7 @@ def get_srcs(lvl):
 
 
 def get_src_meta():
-    df = pd.read_csv(cwd / '../../../inputs/cod.csv',
+    df = pd.read_csv(cwd / '../../../config/cod.csv',
                      keep_default_na=False, na_values=['', '#N/A'])
     return df
 

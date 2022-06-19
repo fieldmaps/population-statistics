@@ -16,13 +16,13 @@ def input_data(name):
             '-t', '512x512',
             (data / f'hrsl_{name}/hrsl_{name}-latest.vrt').resolve(),
             f'meta_fb_pop_{data_types[name]}',
-        ], stdout=f)
+        ], stdout=f, stderr=subprocess.DEVNULL)
     subprocess.run([
         'psql',
         '--quiet',
         '-d', DATABASE,
         '-f', query,
-    ])
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     query.unlink(missing_ok=True)
     logger.info(name)
 

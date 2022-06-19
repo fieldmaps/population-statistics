@@ -15,12 +15,12 @@ def main():
             '-t', 'auto',
             (data / f'ppp_{YEAR}_unconstrained.tif').resolve(),
             'worldpop_pop',
-        ], stdout=f)
+        ], stdout=f, stderr=subprocess.DEVNULL)
     subprocess.run([
         'psql',
         '--quiet',
         '-d', DATABASE,
         '-f', query,
-    ])
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     query.unlink(missing_ok=True)
     logger.info(f'finished')

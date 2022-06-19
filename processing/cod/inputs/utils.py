@@ -5,7 +5,7 @@ from hdx.data.dataset import Dataset
 
 Configuration.create(hdx_read_only=True, user_agent='read_only')
 cwd = Path(__file__).parent
-COD_URL = cwd / '../../../inputs/cod_tmp.csv'
+COD_URL = cwd / '../../../config/cod_tmp.csv'
 
 fieldmap = {
     'ISO 3166-1 Alpha 3-Codes': 'iso_3',

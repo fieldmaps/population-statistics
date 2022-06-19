@@ -12,7 +12,7 @@ cwd = Path(__file__).parent
 
 
 def get_all_meta():
-    df = pd.read_csv(cwd / '../../../inputs/meta.csv',
+    df = pd.read_csv(cwd / '../../../config/meta.csv',
                      keep_default_na=False, na_values=['', '#N/A'])
     df['id'] = df['iso_wp'].combine_first(df['iso_3'])
     df['id'] = df['id'].str.lower()

@@ -3,7 +3,7 @@ from .utils import DATA_URL, YEAR, cwd, logging
 
 logger = logging.getLogger(__name__)
 inputs = cwd / '../../../inputs/un_wpp'
-data = cwd / '../../../data/un_wpp'
+data = cwd / '../../../data'
 
 
 def main():
