@@ -1,5 +1,5 @@
-from . import download
-from .utils import logging
+from processing.un_wpp.inputs import download
+from processing.un_wpp.inputs.utils import logging
 
 logger = logging.getLogger(__name__)
 

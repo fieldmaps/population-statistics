@@ -1,5 +1,6 @@
+import shutil
 import pandas as pd
-from .utils import cwd, logging, grps, cols, col_map, get_srcs, cols_meta
+from processing.cod.data.utils import cwd, logging, grps, cols, col_map, get_ids, get_srcs, cols_meta
 
 logger = logging.getLogger(__name__)
 data = cwd / '../../../data/cod'
@@ -55,7 +56,26 @@ def agg_attrs(df, lvl):
     return df
 
 
-def main(name, lvl, row):
+def add_special(df):
+    df['t_15_24'] = df['t_15_19'] + df['t_20_24']
+    df['f_15_49'] = df['f_15_19'] + df['f_20_24'] + df['f_25_29'] + \
+        df['f_30_34'] + df['f_35_39'] + df['f_40_44'] + df['t_45_49']
+    return df
+
+
+def add_ids(df, lvl, df1):
+    if lvl > 0:
+        df1 = df1[get_ids(lvl)].drop_duplicates()
+        df1 = df1.drop(columns=get_srcs(lvl-1))
+        df = df.merge(df1, on=f'adm{lvl}_src')
+    else:
+        df1 = df1[[*get_ids(0), 'iso_2']].drop_duplicates()
+        df = df.rename(columns={f'adm{lvl}_src': 'iso_2'})
+        df = df.merge(df1, on='iso_2')
+    return df
+
+
+def main(name, lvl, row, df1):
     data.mkdir(parents=True, exist_ok=True)
     file = cwd / f'../../../inputs/cod/{name}.csv'
     output = data / f'{name}.xlsx'
@@ -63,6 +83,11 @@ def main(name, lvl, row):
     df = pd.read_csv(file, keep_default_na=False, na_values=['', '#N/A'])
     df = clean_attrs(df, name, lvl, row)
     df = agg_attrs(df, lvl)
+    df = add_special(df)
     df = add_meta(df, row)
+    df = add_ids(df, lvl, df1)
     df.to_excel(output, index=False)
-    logger.info(name)
+
+
+def cleanup():
+    shutil.rmtree(data, ignore_errors=True)

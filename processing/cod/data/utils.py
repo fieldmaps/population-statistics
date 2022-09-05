@@ -10,6 +10,7 @@ cwd = Path(__file__).parent
 grps = ['t', 'f', 'm']
 dests = ['00_04', '05_09', '10_14', '15_19', '20_24', '25_29', '30_34',
          '35_39', '40_44', '45_49', '50_54', '55_59', '60_plus']
+special = ['t_15_24', 'f_15_49']
 cols_meta = ['iso_3', 'ps_lvl', 'ps_year', 'ps_census']
 
 
@@ -18,6 +19,7 @@ def get_cols():
     for grp in grps:
         for dest in dests:
             cols.append(f'{grp}_{dest}')
+    cols = cols + special
     return cols
 
 
@@ -46,8 +48,15 @@ def get_all_meta():
     return df[df['ps_lvl'] >= 0]
 
 
+def get_ids(lvl):
+    result = []
+    for l in range(lvl, -1, -1):
+        result.extend([f'adm{l}_id', f'adm{l}_src'])
+    return result
+
+
 def get_srcs(lvl):
-    return [f'adm{l}_src' for l in range(0, lvl+1)]
+    return [f'adm{l}_src' for l in range(lvl, -1, -1)]
 
 
 def get_src_meta():

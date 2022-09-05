@@ -1,5 +1,5 @@
-from . import merge
-from .utils import logging
+from processing.meta_fb.outputs import merge
+from processing.meta_fb.outputs.utils import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,5 @@
 import subprocess
-from .utils import DATABASE, cwd, logging
+from processing.boundaries.inputs.utils import DATABASE, cwd, logging
 
 logger = logging.getLogger(__name__)
 

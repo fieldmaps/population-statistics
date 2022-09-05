@@ -1,5 +1,5 @@
-from . import stats, outputs
-from .utils import logging
+from processing.worldpop.data import stats, outputs
+from processing.worldpop.data.utils import logging
 
 logger = logging.getLogger(__name__)
 

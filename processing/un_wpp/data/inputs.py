@@ -1,5 +1,5 @@
 import pandas as pd
-from .utils import DATA_URL, YEAR, cwd, logging
+from processing.un_wpp.data.utils import DATA_URL, YEAR, cwd, logging
 
 logger = logging.getLogger(__name__)
 inputs = cwd / '../../../inputs/un_wpp'

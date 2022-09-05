@@ -1,7 +1,7 @@
 import subprocess
 import requests
 from multiprocessing import Pool
-from .utils import YEAR, cwd, logging, adm0_list
+from processing.worldpop.inputs.utils import YEAR, cwd, logging, adm0_list
 
 logger = logging.getLogger(__name__)
 data = cwd / '../../../inputs/worldpop'

@@ -1,5 +1,5 @@
 import subprocess
-from .utils import YEAR, logging, cwd
+from processing.worldpop.inputs.utils import YEAR, logging, cwd
 
 logger = logging.getLogger(__name__)
 data = cwd / '../../../inputs/worldpop'

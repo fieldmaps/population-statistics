@@ -1,6 +1,6 @@
-from psycopg2 import connect
-from psycopg2.sql import SQL, Identifier
-from .utils import DATABASE, logging
+from psycopg import connect
+from psycopg.sql import SQL, Identifier
+from processing.meta_fb.data.utils import DATABASE, logging
 
 logger = logging.getLogger(__name__)
 
@@ -33,12 +33,9 @@ query_1 = """
 
 
 def main():
-    con = connect(database=DATABASE)
-    con.set_session(autocommit=True)
-    cur = con.cursor()
-    cur.execute(SQL(query_1).format(
+    conn = connect(f'dbname={DATABASE}', autocommit=True)
+    conn.execute(SQL(query_1).format(
         table_out=Identifier(f'meta_fb_pop_out'),
     ))
-    cur.close()
-    con.close()
+    conn.close()
     logger.info('finished')

@@ -1,5 +1,5 @@
 import pandas as pd
-from .utils import logging, cwd
+from processing.meta_fb.outputs.utils import logging, cwd
 
 logger = logging.getLogger(__name__)
 config = cwd / '../../../config'

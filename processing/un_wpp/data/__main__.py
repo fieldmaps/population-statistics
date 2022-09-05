@@ -1,5 +1,5 @@
-from . import inputs
-from .utils import logging
+from processing.un_wpp.data import inputs
+from processing.un_wpp.data.utils import logging
 
 logger = logging.getLogger(__name__)
 

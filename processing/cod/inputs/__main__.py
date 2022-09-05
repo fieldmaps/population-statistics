@@ -1,6 +1,6 @@
 from pathlib import Path
 import pandas as pd
-from .utils import get_cod_meta, get_hdx_metadata, join_hdx_meta
+from processing.cod.inputs.utils import get_cod_meta, get_hdx_metadata, join_hdx_meta
 
 cwd = Path(__file__).parent
 

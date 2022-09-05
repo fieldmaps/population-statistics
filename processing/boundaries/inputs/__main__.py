@@ -1,5 +1,5 @@
-from . import inputs
-from .utils import logging
+from processing.boundaries.inputs import inputs
+from processing.boundaries.inputs.utils import logging
 
 logger = logging.getLogger(__name__)
 

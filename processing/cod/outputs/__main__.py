@@ -1,5 +1,5 @@
-from processing.un_wpp.outputs import merge
-from processing.un_wpp.outputs.utils import logging
+from processing.cod.outputs import merge
+from processing.cod.outputs.utils import logging
 
 logger = logging.getLogger(__name__)
 

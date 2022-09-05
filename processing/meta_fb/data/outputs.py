@@ -1,5 +1,5 @@
 import pandas as pd
-from .utils import DATABASE, logging, cwd, land_date
+from processing.meta_fb.data.utils import DATABASE, logging, cwd, land_date
 
 logger = logging.getLogger(__name__)
 outputs = cwd / f'../../../data'

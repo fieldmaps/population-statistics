@@ -1,5 +1,5 @@
 import pandas as pd
-from .utils import logging, cwd
+from processing.worldpop.outputs.utils import logging, cwd
 
 logger = logging.getLogger(__name__)
 data = cwd / '../../../data'

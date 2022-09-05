@@ -1,6 +1,6 @@
-from psycopg2 import connect
-from psycopg2.sql import SQL, Identifier
-from .utils import DATABASE, logging, data_types, run_process
+from psycopg import connect
+from psycopg.sql import SQL, Identifier
+from processing.meta_fb.data.utils import DATABASE, logging, data_types, run_process
 
 logger = logging.getLogger(__name__)
 
@@ -26,16 +26,13 @@ query_1 = """
 
 
 def data_stats(name):
-    con = connect(database=DATABASE)
-    con.set_session(autocommit=True)
-    cur = con.cursor()
-    cur.execute(SQL(query_1).format(
+    conn = connect(f'dbname={DATABASE}', autocommit=True)
+    conn.execute(SQL(query_1).format(
         table_in=Identifier(f'meta_fb_pop_{data_types[name]}'),
         col=Identifier(data_types[name]),
         table_out=Identifier(f'meta_fb_pop_{data_types[name]}_out'),
     ))
-    cur.close()
-    con.close()
+    conn.close()
     logger.info(name)
 
 

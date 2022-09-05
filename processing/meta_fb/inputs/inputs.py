@@ -1,6 +1,6 @@
 import filecmp
 import subprocess
-from .utils import DATABASE, cwd, logging, run_process, data_types
+from processing.meta_fb.inputs.utils import DATABASE, cwd, logging, run_process, data_types
 
 logger = logging.getLogger(__name__)
 data = cwd / f'../../../inputs/meta_fb'
@@ -30,5 +30,8 @@ def input_data(name):
 def main():
     vrt_imported = data / 'hrsl-imported.vrt'
     vrt_latest = data / 'hrsl_general-latest.vrt'
-    if not filecmp.cmp(vrt_imported, vrt_latest):
+    if not vrt_imported.is_file():
         run_process(input_data)
+    elif not filecmp.cmp(vrt_imported, vrt_latest):
+        run_process(input_data)
+    vrt_latest.rename(vrt_imported)

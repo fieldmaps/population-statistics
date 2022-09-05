@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from .utils import DATA_URL, ADM0_URL, cwd, logging
+from processing.un_wpp.inputs.utils import DATA_URL, ADM0_URL, cwd, logging
 
 logger = logging.getLogger(__name__)
 data = cwd / '../../../inputs/un_wpp'

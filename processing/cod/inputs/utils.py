@@ -1,9 +1,7 @@
+import requests
 import pandas as pd
 from pathlib import Path
-from hdx.api.configuration import Configuration
-from hdx.data.dataset import Dataset
 
-Configuration.create(hdx_read_only=True, user_agent='read_only')
 cwd = Path(__file__).parent
 COD_URL = cwd / '../../../config/cod_tmp.csv'
 
@@ -23,8 +21,9 @@ def get_cod_meta():
 
 
 def get_hdx_metadata(url):
-    dataset_id = url[33:]
-    data = Dataset.read_from_hdx(dataset_id)
+    id = url[33:]
+    url = f'https://data.humdata.org/api/3/action/package_show?id={id}'
+    data = requests.get(url).json().get('result')
     return data
 
 

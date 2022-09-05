@@ -1,5 +1,5 @@
 import shutil
-from .utils import cwd, logging
+from processing.worldpop.inputs.utils import cwd, logging
 
 logger = logging.getLogger(__name__)
 data = cwd / '../../../inputs/worldpop'

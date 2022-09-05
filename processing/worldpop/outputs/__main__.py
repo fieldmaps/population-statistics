@@ -1,5 +1,5 @@
-from . import merge
-from .utils import logging
+from processing.worldpop.outputs import merge
+from processing.worldpop.outputs.utils import logging
 
 logger = logging.getLogger(__name__)
 
