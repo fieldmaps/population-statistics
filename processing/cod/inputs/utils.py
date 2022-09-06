@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 
 cwd = Path(__file__).parent
-COD_URL = cwd / '../../../config/cod_tmp.csv'
+COD_URL = cwd / '../../../config/cod_meta.csv'
 
 fieldmap = {
     'ISO 3166-1 Alpha 3-Codes': 'iso_3',

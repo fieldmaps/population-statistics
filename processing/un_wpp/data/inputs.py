@@ -1,5 +1,5 @@
 import pandas as pd
-from processing.un_wpp.data.utils import DATA_URL, YEAR, cwd, logging
+from processing.un_wpp.data.utils import DATA_NAME, YEAR, cwd, logging
 
 logger = logging.getLogger(__name__)
 inputs = cwd / '../../../inputs/un_wpp'
@@ -8,8 +8,8 @@ data = cwd / '../../../data'
 
 def main():
     data.mkdir(exist_ok=True, parents=True)
-    file = inputs / DATA_URL.split('/')[-1]
-    df = pd.read_csv(file)
+    file = inputs / DATA_NAME
+    df = pd.read_csv(file, low_memory=False)
     df = df[df['VarID'] == 2]
     df = df[df['Time'] == YEAR]
     df = df[df['LocID'] < 900]
