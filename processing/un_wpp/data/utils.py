@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 from pathlib import Path
 
 cwd = Path(__file__).parent
@@ -7,4 +8,4 @@ logging.basicConfig(level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 DATA_NAME = 'WPP2022_TotalPopulationBySex.csv'
-YEAR = 2022
+YEAR = date.today().year

@@ -4,8 +4,8 @@ from processing.cod.data import attributes, concat
 from processing.cod.data.utils import logging, cwd, adm0_list
 
 logger = logging.getLogger(__name__)
-boundaries = cwd / \
-    f'../../../../admin-boundaries/outputs/edge-matched/humanitarian/intl/adm4_polygons.xlsx'
+boundaries = (
+    cwd / f'../../../../admin-boundaries/outputs/edge-matched/humanitarian/intl/adm4_polygons.xlsx')
 
 
 def run_process(func, df1):
