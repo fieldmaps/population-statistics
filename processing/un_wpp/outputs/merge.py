@@ -1,28 +1,48 @@
 import pandas as pd
+from zipfile import ZipFile, ZIP_DEFLATED
 from processing.un_wpp.outputs.utils import logging, cwd
 
 logger = logging.getLogger(__name__)
-config = cwd / '../../../config'
-outputs = cwd / '../../../outputs'
-
-fields = ['t', 'f', 'm', 't_00_04', 't_15_24', 't_60_plus', 'f_15_49']
+outputs = cwd / '../../../outputs/population/humanitarian/intl/un-wpp'
 
 
-def get_ids(l):
-    return [f'adm{x}_id' for x in range(l, -1, -1)] + ['iso_3', 'wld_update']
+def zip_file(name):
+    file = outputs / name
+    file_zip = outputs / f'{name}.zip'
+    file_zip.unlink(missing_ok=True)
+    with ZipFile(file_zip, 'w', ZIP_DEFLATED) as z:
+        z.write(file, file.name)
+    file.unlink(missing_ok=True)
 
 
 def main():
-    df = pd.read_excel(outputs / 'worldpop.xlsx', sheet_name='adm4_id')
-    df2 = pd.read_excel(outputs / 'meta_fb.xlsx', sheet_name='adm4_id')
-    df = df.merge(df2, on=get_ids(4), how='outer')
-    df['t_x'] = df['t_y'].combine_first(df['t_x'])
-    df = df.rename(columns={'t_x': 't'})
-    df = df.drop('t_y', axis=1)
-    with pd.ExcelWriter(outputs / 'un_wpp.xlsx') as writer:
-        for l in range(4, -2, -1):
-            df = df.groupby(get_ids(l), dropna=False).sum(
-                min_count=1).reset_index()
-            sheet_name = f'adm{l}_id' if l >= 0 else 'iso_3'
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
+    outputs.mkdir(parents=True, exist_ok=True)
+    for l in range(4, -1, -1):
+        df = pd.read_excel(outputs / f'../worldpop/adm{l}_population.xlsx')
+        df1 = pd.read_excel(outputs / f'../meta-fb/adm{l}_population.xlsx')
+        df = df.merge(df1, on=df.columns.tolist()[:-2], how='outer')
+        df['t_x'] = df['t_y'].combine_first(df['t_x'])
+        df['pop_src_x'] = df['pop_src_y'].combine_first(df['pop_src_x'])
+        df = df.rename(columns={'t_x': 't', 'pop_src_x': 'pop_src'})
+        df = df.drop(columns=['t_y', 'pop_src_y'])
+        if l > 0:
+            df['src_date'] = df['src_date'].dt.date
+            df['src_update'] = df['src_update'].dt.date
+        df['wld_date'] = df['wld_date'].dt.date
+        df['wld_update'] = df['wld_update'].dt.date
+        df.to_excel(outputs / f'adm{l}_population.xlsx', index=False)
+        df.to_csv(outputs / f'adm{l}_population.csv', index=False)
+        zip_file(f'adm{l}_population.csv')
+        if l > 0:
+            df['src_date'] = pd.to_datetime(df['src_date'])
+            df['src_date'] = df['src_date'].dt.strftime('%Y-%m-%d')
+            df['src_update'] = pd.to_datetime(df['src_update'])
+            df['src_update'] = df['src_update'].dt.strftime(
+                '%Y-%m-%d')
+        df['wld_date'] = pd.to_datetime(df['wld_date'])
+        df['wld_date'] = df['wld_date'].dt.strftime('%Y-%m-%d')
+        df['wld_update'] = pd.to_datetime(df['wld_update'])
+        df['wld_update'] = df['wld_update'].dt.strftime('%Y-%m-%d')
+        df.to_json(outputs / f'adm{l}_population.json', orient='records')
+        zip_file(f'adm{l}_population.json')
     logger.info('finished')

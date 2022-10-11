@@ -10,12 +10,3 @@ os.environ['NUMEXPR_MAX_THREADS'] = str(os.cpu_count())
 
 DATABASE = 'population_statistics'
 cwd = Path(__file__).parent
-
-
-def get_land_date():
-    cwd = Path(__file__).parent
-    with open(cwd / '../../../../adm0-generator/data/date.txt') as f:
-        return f.readline()
-
-
-land_date = get_land_date()

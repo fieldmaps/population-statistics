@@ -34,12 +34,3 @@ def run_process(func):
     pool.join()
     for result in results:
         result.get()
-
-
-def get_land_date():
-    cwd = Path(__file__).parent
-    with open(cwd / '../../../../adm0-generator/data/date.txt') as f:
-        return f.readline()
-
-
-land_date = get_land_date()
