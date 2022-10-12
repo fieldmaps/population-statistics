@@ -3,6 +3,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from processing.worldpop.outputs.utils import logging, cwd, get_attrs
 
 logger = logging.getLogger(__name__)
+
 data = cwd / '../../../data'
 outputs = cwd / '../../../outputs/population/humanitarian/intl/worldpop'
 
@@ -18,17 +19,6 @@ def zip_file(name):
     with ZipFile(file_zip, 'w', ZIP_DEFLATED) as z:
         z.write(file, file.name)
     file.unlink(missing_ok=True)
-
-
-def export_factor(df):
-    df1 = pd.read_excel(data / 'un_wpp.xlsx')
-    dfx = df.groupby(get_ids(-1), dropna=False).sum(
-        numeric_only=True, min_count=1).reset_index()
-    dfx = dfx.merge(df1, on='iso_3', how='left')
-    dfx['factor'] = dfx['t_y'] / dfx['t_x']
-    dfx['factor'] = dfx['factor'].fillna(1)
-    dfx = dfx[['iso_3', 'factor']]
-    return dfx
 
 
 def export_attrs(df):
@@ -63,10 +53,7 @@ def export_attrs(df):
 def main():
     outputs.mkdir(parents=True, exist_ok=True)
     df = pd.read_excel(data / 'worldpop.xlsx')
-    dfx = export_factor(df)
-    df = df.merge(dfx, on=get_ids(-1))
-    df['t'] = df['t'] * df['factor']
-    df['t'] = df['t'].round(0).fillna(0).astype(int)
-    df = df.drop(['count', 'factor'], axis=1)
+    df = df.drop(columns=['count'])
+    df['t'] = df['t'].fillna(0).astype(int)
     export_attrs(df)
     logger.info('finished')

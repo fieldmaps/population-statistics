@@ -23,17 +23,6 @@ def zip_file(name):
     file.unlink(missing_ok=True)
 
 
-def export_factor(df):
-    df1 = pd.read_excel(data / 'un_wpp.xlsx')
-    dfx = df.groupby(get_ids(-1), dropna=False).sum(
-        numeric_only=True, min_count=1).reset_index()
-    dfx = dfx.merge(df1, on='iso_3', how='left')
-    dfx['factor'] = dfx['t_y'] / dfx['t_x']
-    dfx['factor'] = dfx['factor'].fillna(1)
-    dfx = dfx[['iso_3', 'factor']]
-    return dfx
-
-
 def export_attrs(df):
     for l in range(4, -1, -1):
         df1 = df.groupby(get_ids(l), dropna=False).sum(
@@ -69,11 +58,8 @@ def main():
     df2 = pd.read_csv(config / 'meta_fb.csv')
     df = df.merge(df2, on='iso_3')
     df = df[df['valid'] == 1]
-    dfx = export_factor(df)
-    df = df.merge(dfx, on=get_ids(-1))
+    df = df.drop(columns=['count', 'valid'])
     for field in fields:
-        df[field] = df[field] * df['factor']
-        df[field] = df[field].round(0).fillna(0).astype(int)
-    df = df.drop(['count', 'factor', 'valid'], axis=1)
+        df[field] = df[field].fillna(0).astype(int)
     export_attrs(df)
     logger.info('finished')

@@ -3,7 +3,10 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from processing.un_wpp.outputs.utils import logging, cwd
 
 logger = logging.getLogger(__name__)
+data = cwd / '../../../data'
 outputs = cwd / '../../../outputs/population/humanitarian/intl/un-wpp'
+
+fields = ['t', 'f', 'm', 't_00_04', 't_15_24', 't_60_plus', 'f_15_49']
 
 
 def zip_file(name):
@@ -13,6 +16,17 @@ def zip_file(name):
     with ZipFile(file_zip, 'w', ZIP_DEFLATED) as z:
         z.write(file, file.name)
     file.unlink(missing_ok=True)
+
+
+def export_factor(df):
+    df1 = pd.read_excel(data / 'un_wpp.xlsx')
+    dfx = df.groupby(['iso_3'], dropna=False).sum(
+        numeric_only=True, min_count=1).reset_index()
+    dfx = dfx.merge(df1, on='iso_3', how='left')
+    dfx['factor'] = dfx['t_y'] / dfx['t_x']
+    dfx['factor'] = dfx['factor'].fillna(1)
+    dfx = dfx[['iso_3', 'factor']]
+    return dfx
 
 
 def main():
@@ -25,6 +39,14 @@ def main():
         df['pop_src_x'] = df['pop_src_y'].combine_first(df['pop_src_x'])
         df = df.rename(columns={'t_x': 't', 'pop_src_x': 'pop_src'})
         df = df.drop(columns=['t_y', 'pop_src_y'])
+
+        dfx = export_factor(df)
+        df = df.merge(dfx, on='iso_3')
+        for field in fields:
+            df[field] = df[field] * df['factor']
+            df[field] = df[field].round(0).fillna(0).astype(int)
+        df = df.drop(columns=['factor'])
+
         if l > 0:
             df['src_date'] = df['src_date'].dt.date
             df['src_update'] = df['src_update'].dt.date
