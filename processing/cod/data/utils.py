@@ -11,7 +11,7 @@ grps = ['t', 'f', 'm']
 dests = ['00_04', '05_09', '10_14', '15_19', '20_24', '25_29', '30_34',
          '35_39', '40_44', '45_49', '50_54', '55_59', '60_plus']
 special = ['t_15_24', 'f_15_49']
-cols_meta = ['iso_3', 'ps_lvl', 'ps_year', 'ps_census']
+cols_meta = ['iso_3', 'pop_lvl', 'pop_year']
 
 
 def get_cols():
@@ -36,22 +36,28 @@ def get_col_map():
 
 
 def get_all_meta():
-    dtypes = {'cod_lvl': 'Int8', 'cod_lvl_max': 'Int8',
-              'cod_year': 'Int16', 'cod_census': 'Int16'}
+    dtypes = {'cod_lvl': 'Int8', 'cod_lvl_max': 'Int8', 'cod_year': 'Int16'}
     df = pd.read_csv(cwd / '../../../config/meta.csv', dtype=dtypes,
                      keep_default_na=False, na_values=['', '#N/A'])
-    df = df.rename(columns={'cod_lvl': 'ps_lvl', 'cod_lvl_max': 'ps_lvl_max',
-                            'cod_year': 'ps_year', 'cod_census': 'ps_census'})
+    df = df.rename(columns={'cod_lvl': 'pop_lvl', 'cod_lvl_max': 'pop_lvl_max',
+                            'cod_year': 'pop_year'})
     df['id'] = df['iso_3'].str.lower()
-    df['ps_lvl_max'] = df['ps_lvl_max'].combine_first(df['ps_lvl'])
-    df = df[['id', 'iso_3', 'ps_lvl', 'ps_lvl_max', 'ps_year', 'ps_census']]
-    return df[df['ps_lvl'] >= 0]
+    df['pop_lvl_max'] = df['pop_lvl_max'].combine_first(df['pop_lvl'])
+    df = df[['id', 'iso_3', 'pop_lvl', 'pop_lvl_max', 'pop_year']]
+    return df[df['pop_lvl'] >= 0]
 
 
-def get_ids(lvl):
+def get_ids(lvl, simple=False, reverse=False):
     result = []
-    for l in range(lvl, -1, -1):
-        result.extend([f'adm{l}_id', f'adm{l}_src'])
+    if reverse:
+        for l in range(0, lvl+1):
+            result.extend([f'adm{l}_id'])
+    else:
+        for l in range(lvl, -1, -1):
+            if simple:
+                result.extend([f'adm{l}_id'])
+            else:
+                result.extend([f'adm{l}_id', f'adm{l}_src'])
     return result
 
 

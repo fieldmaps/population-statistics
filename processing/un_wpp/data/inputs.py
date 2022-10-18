@@ -15,7 +15,8 @@ def main():
     df = df[df['LocID'] < 900]
     df = df[['iso_3', 'PopTotal']]
     df = df.rename(columns={'PopTotal': 't'})
-    df['t'] = df['t'].apply(lambda x: x * 1000)
+    df['t'] = df['t'].apply(lambda x: x * 1000).astype(int)
     df = df.sort_values('iso_3')
-    df.to_excel(data / 'un_wpp.xlsx', index=False)
+    df.to_parquet(data / 'un_wpp.parquet', index=False)
+    df.to_csv(data / 'un_wpp.csv.zip', index=False)
     logger.info('finished')

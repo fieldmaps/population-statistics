@@ -9,15 +9,16 @@ outputs = cwd / '../../../data'
 def main():
     frames = []
     outputs.mkdir(parents=True, exist_ok=True)
-    output = (outputs / 'cod.xlsx')
-    output.unlink(missing_ok=True)
     for row in adm0_list:
         name = row['id']
-        file = (data / f'{name}.xlsx')
-        df = pd.read_excel(file, keep_default_na=False, na_values=['', '#N/A'])
+        file = (data / f'{name}.parquet')
+        df = pd.read_parquet(file)
         frames.append(df)
     df = pd.concat(frames)
-    df = df[cols_meta[:1] + get_ids(4) + cols_meta[1:] + get_cols()]
-    df = df.sort_values(by=cols_meta[:1] + get_ids(4))
-    df.to_excel(output, index=False)
+    df = df[get_ids(4, True) + ['iso_3'] + cols_meta[1:] + get_cols()]
+    df['join'] = df['adm4_id'].combine_first(df['adm3_id']).combine_first(
+        df['adm2_id']).combine_first(df['adm1_id']).combine_first(df['adm0_id'])
+    df = df.sort_values(by=get_ids(4, reverse=True))
+    df.to_parquet(outputs / 'cod.parquet', index=False)
+    df.to_csv(outputs / 'cod.csv.zip', index=False, float_format='%.0f')
     logger.info('finished')

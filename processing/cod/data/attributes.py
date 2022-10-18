@@ -7,7 +7,7 @@ data = cwd / '../../../data/cod'
 
 
 def clean_attrs(df, name, lvl, row):
-    l_max = row['ps_lvl_max']
+    l_max = row['pop_lvl_max']
     df.columns = df.columns.str.lower()
     df.columns = df.columns.str.replace('_tl', '')
     df.columns = df.columns.str.replace('plus', '_plus')
@@ -17,7 +17,8 @@ def clean_attrs(df, name, lvl, row):
         raise RuntimeError(f'DUPLICATE adm{l_max}_pcode: {name}')
     for l in range(0, lvl+1):
         df = df.rename(columns={f'adm{l}_pcode': f'adm{l}_src'})
-    df = df.groupby(get_srcs(lvl), dropna=False).sum(min_count=1).reset_index()
+    df = df.groupby(get_srcs(lvl), dropna=False).sum(
+        numeric_only=True, min_count=1).reset_index()
     return df
 
 
@@ -64,13 +65,13 @@ def add_special(df):
 
 
 def add_ids(df, lvl, df1):
+    df = df.rename(columns={f'adm0_src': 'iso_2'})
     if lvl > 0:
         df1 = df1[get_ids(lvl)].drop_duplicates()
         df1 = df1.drop(columns=get_srcs(lvl-1))
         df = df.merge(df1, on=f'adm{lvl}_src')
     else:
         df1 = df1[[*get_ids(0), 'iso_2']].drop_duplicates()
-        df = df.rename(columns={f'adm{lvl}_src': 'iso_2'})
         df = df.merge(df1, on='iso_2')
     return df
 
@@ -78,15 +79,13 @@ def add_ids(df, lvl, df1):
 def main(name, lvl, row, df1):
     data.mkdir(parents=True, exist_ok=True)
     file = cwd / f'../../../inputs/cod/{name}.csv'
-    output = data / f'{name}.xlsx'
-    output.unlink(missing_ok=True)
     df = pd.read_csv(file, keep_default_na=False, na_values=['', '#N/A'])
     df = clean_attrs(df, name, lvl, row)
     df = agg_attrs(df, lvl)
     df = add_special(df)
     df = add_meta(df, row)
     df = add_ids(df, lvl, df1)
-    df.to_excel(output, index=False)
+    df.to_parquet(data / f'{name}.parquet', index=False)
 
 
 def cleanup():

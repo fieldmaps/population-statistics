@@ -12,7 +12,7 @@ def run_process(func, df1):
     results = []
     pool = Pool()
     for row in adm0_list:
-        args = [row['id'], row['ps_lvl'], row, df1]
+        args = [row['id'], row['pop_lvl'], row, df1]
         result = pool.apply_async(func, args=args)
         results.append(result)
     pool.close()
