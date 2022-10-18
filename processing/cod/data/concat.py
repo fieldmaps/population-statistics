@@ -15,6 +15,9 @@ def main():
         df = pd.read_parquet(file)
         frames.append(df)
     df = pd.concat(frames)
+    for col in get_ids(4, True):
+        if col not in df:
+            df[col] = None
     df = df[get_ids(4, True) + ['iso_3'] + cols_meta[1:] + get_cols()]
     df['join'] = df['adm4_id'].combine_first(df['adm3_id']).combine_first(
         df['adm2_id']).combine_first(df['adm1_id']).combine_first(df['adm0_id'])
