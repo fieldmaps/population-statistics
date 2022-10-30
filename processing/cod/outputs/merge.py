@@ -17,6 +17,10 @@ def get_full_ids(l):
     return get_ids(l) + ['pop_src'] + fields
 
 
+def get_join_ids(l):
+    return [f'adm{l}_id'] + cols_meta + get_pop_cols()
+
+
 def apply_factor(df):
     df1 = pd.read_parquet(data / 'un_wpp.parquet')
     dfx = df.groupby(['iso_3'], dropna=False).sum(
@@ -88,6 +92,10 @@ def export_df(df):
             numeric_only=True, min_count=1).reset_index()
         df2 = pd.read_excel(get_attrs(l))
         df2 = df2.merge(df1, on=get_ids(l))
+        df1 = df1[get_join_ids(l)]
+        df1.to_parquet(outputs / f'adm{l}_join.parquet', index=False)
+        df1.to_csv(outputs / f'adm{l}_join.csv.zip',
+                   index=False, float_format='%.0f')
         if l > 0:
             df2['src_date'] = df2['src_date'].dt.date
             df2['src_update'] = df2['src_update'].dt.date

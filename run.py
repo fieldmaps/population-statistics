@@ -1,6 +1,6 @@
 import subprocess
 
-funcs = ['meta', 'boundaries.inputs', 'meta_fb.inputs',
+funcs = ['meta', 'boundaries.inputs', 'boundaries.data', 'meta_fb.inputs',
          'worldpop.data', 'meta_fb.data', 'cod.data',
          'worldpop.outputs', 'meta_fb.outputs', 'cod.outputs']
 
