@@ -1,6 +1,4 @@
-openpyxl>=3.0.10
-pandas>=1.4.4
-psycopg[c,pool]>=3.1.0
-pyarrow>=9.0.0
-requests>=2.28.1
-sqlalchemy>=1.4.40
+pandas[excel,parquet,sql-other]>=2.1.4
+psycopg[binary,pool]>=3.1.16
+psycopg2-binary>=2.9.9
+requests>=2.31.0

@@ -1,8 +1,0 @@
-.git
-__pycache__
-/data
-/inputs/ciesin
-/inputs/cod
-/inputs/meta_fb
-/inputs/worldpop
-/outputs
