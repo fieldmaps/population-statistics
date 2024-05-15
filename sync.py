@@ -4,27 +4,36 @@ from pathlib import Path
 cwd = Path(__file__).parent
 exts = ["json", "csv", "xlsx"]
 
-if __name__ == "__main__":
-    for ext in exts:
-        subprocess.run(
-            [
-                "s3cmd",
-                "sync",
-                "--acl-public",
-                cwd / f"outputs/population.{ext}",
-                f"s3://data.fieldmaps.io/population.{ext}",
-            ]
-        )
+
+def sync(src, dest):
     subprocess.run(
         [
-            "s3cmd",
+            "rclone",
             "sync",
-            "--acl-public",
-            "--delete-removed",
-            "--rexclude",
-            r"\/\.",
-            "--multipart-chunk-size-mb=5120",
-            cwd / "outputs/population/humanitarian",
-            "s3://data.fieldmaps.io/population/",
+            "--exclude=.*",
+            "--progress",
+            "--s3-no-check-bucket",
+            "--s3-chunk-size=256M",
+            src,
+            dest,
         ]
     )
+
+
+def copy(src, dest):
+    subprocess.run(
+        [
+            "rclone",
+            "copyto",
+            "--s3-no-check-bucket",
+            "--s3-chunk-size=256M",
+            src,
+            dest,
+        ]
+    )
+
+
+if __name__ == "__main__":
+    for ext in exts:
+        copy(cwd / f"outputs/population.{ext}", f"r2://fieldmaps-data/population.{ext}")
+    sync(cwd / "outputs/population", "r2://fieldmaps-data/population")
