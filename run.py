@@ -3,7 +3,6 @@ import subprocess
 funcs = [
     "meta",
     "boundaries.inputs",
-    "boundaries.data",
     # "worldpop.inputs",
     "meta_fb.inputs",
     "worldpop.data",

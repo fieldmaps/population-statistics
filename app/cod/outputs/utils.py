@@ -49,4 +49,6 @@ def get_attrs(l):
             / f"../../../../admin-boundaries/outputs/edge-matched/humanitarian/intl/adm{l}_polygons.xlsx"
         )
     else:
-        return cwd / "../../../../adm0-generator/outputs/osm/intl/adm0_polygons.xlsx"
+        return (
+            cwd / "../../../../adm0-generator/outputs/adm0/osm/intl/adm0_polygons.xlsx"
+        )
