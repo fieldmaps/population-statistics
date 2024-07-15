@@ -57,7 +57,10 @@ def export_attrs(df):
         df3.to_parquet(outputs / f"adm{l}_population.parquet", index=False)
         df3.to_excel(outputs / f"adm{l}_population.xlsx", index=False)
         df3.to_csv(
-            outputs / f"adm{l}_population.csv.zip", index=False, float_format="%.0f"
+            outputs / f"adm{l}_population.csv.zip",
+            index=False,
+            float_format="%.0f",
+            encoding="utf-8-sig",
         )
         if l > 0:
             df3["src_date"] = pd.to_datetime(df3["src_date"])

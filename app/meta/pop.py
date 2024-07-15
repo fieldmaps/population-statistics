@@ -37,5 +37,5 @@ def main(name):
     df = pd.DataFrame(data)
     df["date"] = pd.to_datetime(df["date"])
     df["date"] = df["date"].dt.date
-    df.to_csv(outputs / f"{name}.csv", index=False)
+    df.to_csv(outputs / f"{name}.csv", index=False, encoding="utf-8-sig")
     df.to_excel(outputs / f"{name}.xlsx", index=False)

@@ -29,5 +29,7 @@ def main():
     )
     df = df.sort_values(by=get_ids(4, reverse=True))
     df.to_parquet(outputs / "cod.parquet", index=False)
-    df.to_csv(outputs / "cod.csv.zip", index=False, float_format="%.0f")
+    df.to_csv(
+        outputs / "cod.csv.zip", index=False, float_format="%.0f", encoding="utf-8-sig"
+    )
     logger.info("finished")

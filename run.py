@@ -3,14 +3,11 @@ import subprocess
 funcs = [
     "meta",
     "boundaries.inputs",
+    # "un_wpp.inputs",
     # "worldpop.inputs",
-    "meta_fb.inputs",
+    "un_wpp.data",
     "worldpop.data",
-    "meta_fb.data",
-    # "cod.data",
     "worldpop.outputs",
-    "meta_fb.outputs",
-    # "cod.outputs",
 ]
 
 if __name__ == "__main__":

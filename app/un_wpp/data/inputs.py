@@ -19,5 +19,5 @@ def main():
     df["t"] = df["t"].apply(lambda x: x * 1000).astype(int)
     df = df.sort_values("iso_3")
     df.to_parquet(data / "un_wpp.parquet", index=False)
-    df.to_csv(data / "un_wpp.csv.zip", index=False)
+    df.to_csv(data / "un_wpp.csv.zip", index=False, encoding="utf-8-sig")
     logger.info("finished")

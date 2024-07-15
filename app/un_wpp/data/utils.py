@@ -9,5 +9,5 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
-DATA_NAME = "WPP2022_TotalPopulationBySex.csv"
+DATA_NAME = "WPP2024_TotalPopulationBySex.csv"
 YEAR = date.today().year

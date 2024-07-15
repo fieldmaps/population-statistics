@@ -11,5 +11,10 @@ def main():
     outputs.mkdir(parents=True, exist_ok=True)
     df = pd.read_sql_table("worldpop_pop_out", con)
     df.to_parquet(outputs / "worldpop.parquet", index=False)
-    df.to_csv(outputs / "worldpop.csv.zip", index=False, float_format="%.0f")
+    df.to_csv(
+        outputs / "worldpop.csv.zip",
+        index=False,
+        float_format="%.0f",
+        encoding="utf-8-sig",
+    )
     logger.info("finished")

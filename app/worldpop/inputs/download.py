@@ -1,7 +1,7 @@
 import subprocess
 from multiprocessing import Pool
 
-import requests
+import httpx
 
 from .utils import YEAR, adm0_list, cwd, logging
 
@@ -25,13 +25,12 @@ def run_process():
 def get_tif(id):
     url = f"https://data.worldpop.org/GIS/Population/Global_2000_{YEAR}/{YEAR}/{id.upper()}/{id}_ppp_{YEAR}.tif"
     file = f"unconstrained/{id}_ppp_{YEAR}.tif"
-    r = requests.get(url, stream=True)
-    if r.status_code == 200:
-        with open(data / file, "wb") as f:
-            for chunk in r.iter_content(chunk_size=1024):
-                if chunk:
+    with httpx.Client(http2=True) as client:
+        with client.stream("GET", url) as r:
+            with open(data / file, "wb") as f:
+                for chunk in r.iter_raw():
                     f.write(chunk)
-        logger.info(id)
+    logger.info(id)
 
 
 def build_vrt():
