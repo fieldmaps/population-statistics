@@ -33,7 +33,7 @@ def data_stats(name):
             table_in=Identifier(f"meta_fb_pop_{data_types[name]}"),
             col=Identifier(data_types[name]),
             table_out=Identifier(f"meta_fb_pop_{data_types[name]}_out"),
-        )
+        ),
     )
     conn.close()
     logger.info(name)

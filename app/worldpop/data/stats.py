@@ -33,7 +33,7 @@ def main():
             table_in=Identifier("worldpop_pop"),
             col=Identifier("t"),
             table_out=Identifier("worldpop_pop_out"),
-        )
+        ),
     )
     conn.close()
     logger.info("finished")

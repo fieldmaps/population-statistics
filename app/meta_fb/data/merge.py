@@ -38,7 +38,7 @@ def main():
     conn.execute(
         SQL(query_1).format(
             table_out=Identifier("meta_fb_pop_out"),
-        )
+        ),
     )
     conn.close()
     logger.info("finished")

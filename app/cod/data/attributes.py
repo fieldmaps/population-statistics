@@ -17,7 +17,7 @@ def clean_attrs(df, name, lvl, row):
     if df[f"adm{l_max}_pcode"].duplicated().any():
         logger.info(f"DUPLICATE adm{l_max}_pcode: {name}")
         raise RuntimeError(f"DUPLICATE adm{l_max}_pcode: {name}")
-    for l in range(0, lvl + 1):
+    for l in range(lvl + 1):
         df = df.rename(columns={f"adm{l}_pcode": f"adm{l}_src"})
     df = (
         df.groupby(get_srcs(lvl), dropna=False)
@@ -37,7 +37,7 @@ def agg_attrs_sum(df, col, grp, start):
     col_name = col_map[start]
     if not df[col].isna().all():
         df[f"{grp}_{col_name}"] = df[[f"{grp}_{col_name}", col]].agg(
-            "sum", axis="columns"
+            "sum", axis="columns",
         )
     return df
 

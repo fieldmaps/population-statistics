@@ -16,7 +16,7 @@ def sync(src, dest):
             "--s3-chunk-size=256M",
             src,
             dest,
-        ]
+        ], check=False,
     )
 
 
@@ -29,7 +29,7 @@ def copy(src, dest):
             "--s3-chunk-size=256M",
             src,
             dest,
-        ]
+        ], check=False,
     )
 
 

@@ -19,6 +19,6 @@ def main():
             *["-nln", "adm4_polygons"],
             *["-f", "PostgreSQL", f"PG:dbname={DATABASE}"],
             file,
-        ]
+        ], check=False,
     )
     logger.info("finished")

@@ -28,8 +28,7 @@ def get_tif(id):
     with httpx.Client(http2=True) as client:
         with client.stream("GET", url) as r:
             with open(data / file, "wb") as f:
-                for chunk in r.iter_raw():
-                    f.write(chunk)
+                f.writelines(r.iter_raw())
     logger.info(id)
 
 
@@ -40,7 +39,7 @@ def build_vrt():
             "-q",
             data / "unconstrained.vrt",
             *sorted((data / "unconstrained").rglob("*.tif")),
-        ]
+        ], check=False,
     )
 
 

@@ -19,7 +19,7 @@ def input_data(name):
                 (data / f"hrsl_{name}/hrsl_{name}-latest.vrt").resolve(),
                 f"meta_fb_pop_{data_types[name]}",
             ],
-            stdout=f,
+            check=False, stdout=f,
             stderr=subprocess.DEVNULL,
         )
     subprocess.run(
@@ -29,7 +29,7 @@ def input_data(name):
             *["-d", DATABASE],
             *["-f", query],
         ],
-        stdout=subprocess.DEVNULL,
+        check=False, stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
     query.unlink(missing_ok=True)
@@ -39,8 +39,6 @@ def input_data(name):
 def main():
     vrt_imported = data / "hrsl-imported.vrt"
     vrt_latest = data / "hrsl_general-latest.vrt"
-    if not vrt_imported.is_file():
-        run_process(input_data)
-    elif not filecmp.cmp(vrt_imported, vrt_latest):
+    if not vrt_imported.is_file() or not filecmp.cmp(vrt_imported, vrt_latest):
         run_process(input_data)
     vrt_latest.rename(vrt_imported)

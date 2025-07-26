@@ -104,7 +104,7 @@ def export_df(df):
         df2 = df2.merge(df1, on=get_ids(l))
         df1 = df1[get_join_ids(l)]
         df1.to_excel(
-            outputs / f"adm{l}_join.xlsx", sheet_name=f"adm{l}_join", index=False
+            outputs / f"adm{l}_join.xlsx", sheet_name=f"adm{l}_join", index=False,
         )
         if l > 0:
             df2["src_date"] = df2["src_date"].dt.date

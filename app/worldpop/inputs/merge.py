@@ -18,6 +18,6 @@ def main():
                 *["-co", "PREDICTOR=2"],
                 (data / "unconstrained.vrt"),
                 (data / f"ppp_{YEAR}_unconstrained.tif"),
-            ]
+            ], check=False,
         )
     logger.info("finished")

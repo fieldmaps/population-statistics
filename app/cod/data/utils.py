@@ -64,7 +64,7 @@ def get_all_meta():
             "cod_lvl": "pop_lvl",
             "cod_lvl_max": "pop_lvl_max",
             "cod_year": "pop_year",
-        }
+        },
     )
     df["id"] = df["iso_3"].str.lower()
     df["pop_lvl_max"] = df["pop_lvl_max"].combine_first(df["pop_lvl"])
@@ -75,7 +75,7 @@ def get_all_meta():
 def get_ids(lvl, simple=False, reverse=False):
     result = []
     if reverse:
-        for l in range(0, lvl + 1):
+        for l in range(lvl + 1):
             result.extend([f"adm{l}_id"])
     else:
         for l in range(lvl, -1, -1):
@@ -92,7 +92,7 @@ def get_srcs(lvl):
 
 def get_src_meta():
     df = pd.read_csv(
-        cwd / "../../../config/cod.csv", keep_default_na=False, na_values=["", "#N/A"]
+        cwd / "../../../config/cod.csv", keep_default_na=False, na_values=["", "#N/A"],
     )
     return df
 

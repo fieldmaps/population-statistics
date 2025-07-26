@@ -12,5 +12,5 @@ funcs = [
 
 if __name__ == "__main__":
     for func in funcs:
-        subprocess.run(["python", "-m", f"app.{func}"])
-    subprocess.run(["python", "sync.py"])
+        subprocess.run(["python", "-m", f"app.{func}"], check=False)
+    subprocess.run(["python", "sync.py"], check=False)

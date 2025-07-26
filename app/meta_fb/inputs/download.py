@@ -26,7 +26,7 @@ def get_vrt(name, vrt):
             *["aws", "s3", "cp"],
             f"s3://dataforgood-fb-data/hrsl-cogs/hrsl_{name}/hrsl_{name}-latest.vrt",
             vrt,
-        ]
+        ], check=False,
     )
 
 
@@ -38,7 +38,7 @@ def get_tif(name, include):
             *include,
             f"s3://dataforgood-fb-data/hrsl-cogs/hrsl_{name}/",
             data / f"hrsl_{name}",
-        ]
+        ], check=False,
     )
 
 

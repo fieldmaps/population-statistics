@@ -18,7 +18,7 @@ def main():
                 data / f"ppp_{YEAR}_unconstrained.tif",
                 "worldpop_pop",
             ],
-            stdout=f,
+            check=False, stdout=f,
             stderr=subprocess.DEVNULL,
         )
     subprocess.run(
@@ -28,7 +28,7 @@ def main():
             *["-d", DATABASE],
             *["-f", query],
         ],
-        stdout=subprocess.DEVNULL,
+        check=False, stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
     query.unlink(missing_ok=True)

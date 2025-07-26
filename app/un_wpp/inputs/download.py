@@ -21,7 +21,7 @@ def download_file(url):
             with open(file, "wb") as f:
                 f.write(r.content)
     except:
-        subprocess.run(["curl", "-o", file, url])
+        subprocess.run(["curl", "-o", file, url], check=False)
     if url.endswith(".zip"):
         with ZipFile(file, "r") as z:
             data_file = data / z.namelist()[0]
